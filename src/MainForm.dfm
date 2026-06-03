@@ -70,12 +70,12 @@ object frmMain: TfrmMain
       OnClick = btnOpenModuleClick
     end
     object btnStateWatch: TButton
-      Left = 216
+      Left = 320
       Top = 8
       Width = 100
       Height = 25
       Caption = 'State Watch'
-      TabOrder = 2
+      TabOrder = 3
       OnClick = btnStateWatchClick
     end
   end

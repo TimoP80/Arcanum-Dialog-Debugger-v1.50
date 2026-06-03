@@ -12,6 +12,7 @@ type
     Panel1: TPanel;
     btnLoadDLG: TButton;
     btnOpenModule: TButton;
+    btnStateWatch: TButton;
     OpenDialog1: TOpenDialog;
     lbNPCLine: TListBox;
     lbPlayerOptions: TListBox;
@@ -23,8 +24,9 @@ type
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure btnLoadDLGClick(Sender: TObject);
-    procedure btnOpenModuleClick(Sender: TObject);
-    procedure lbPlayerOptionsDblClick(Sender: TObject);
+  procedure btnOpenModuleClick(Sender: TObject);
+  procedure btnStateWatchClick(Sender: TObject);
+  procedure lbPlayerOptionsDblClick(Sender: TObject);
   private
     FEngine: TDialogEngine;
     FStateWatch: TfrmStateWatch;
@@ -87,6 +89,11 @@ begin
         ShowMessage('Error loading DLG: ' + E.Message);
     end;
   end;
+end;
+
+procedure TfrmMain.btnStateWatchClick(Sender: TObject);
+begin
+  OpenStateWatch;
 end;
 
 procedure TfrmMain.btnOpenModuleClick(Sender: TObject);
