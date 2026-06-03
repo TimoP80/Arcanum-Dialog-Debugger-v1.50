@@ -3,13 +3,12 @@ unit StateWatch;
 interface
 
 uses
- Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.ComCtrls, Vcl.Grids, Vcl.StdCtrls, System.Generics.Collections,
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Grids, Vcl.StdCtrls, System.Generics.Collections,
   DialogEngine;
 
 type
   TfrmStateWatch = class(TForm)
-  private
     pcState: TPageControl;
     tsFlagsVars: TTabSheet;
     tsState: TTabSheet;
@@ -24,6 +23,10 @@ type
     gvSkills: TStringGrid;
     btnRefresh: TButton;
     btnClose: TButton;
+    procedure FormCreate(Sender: TObject);
+    procedure btnRefreshClick(Sender: TObject);
+    procedure btnCloseClick(Sender: TObject);
+  private
     FEngine: TDialogEngine;
     procedure InitGrid(Grid: TStringGrid; const Captions: array of string);
     procedure RefreshFlagsVars;
@@ -31,117 +34,22 @@ type
     procedure RefreshSkills;
     procedure RefreshQuests;
     procedure RefreshRumors;
-    procedure btnRefreshClick(Sender: TObject);
-    procedure btnCloseClick(Sender: TObject);
   public
-    constructor Create(AOwner: TComponent); override;
-    destructor Destroy; override;
     procedure BindEngine(Engine: TDialogEngine);
   end;
 
 implementation
 
-uses System.Math;
+{$R *.dfm}
 
-const
-  SkillNames: array[0..15] of string = (
-    'Bow', 'Dodge', 'Melee', 'Throwing', 'Concealment', 'Pick Pocket',
-    'Silent Move', 'Spot Trap', 'Gambling', 'Haggle', 'Heal', 'Persuasion',
-    'Repair', 'Firearms', 'Pick Lock', 'Arm Trap');
-
-{ TfrmStateWatch }
-
-constructor TfrmStateWatch.Create(AOwner: TComponent);
-var
-  L: Integer;
+procedure TfrmStateWatch.FormCreate(Sender: TObject);
 begin
-  inherited Create(AOwner);
-  Caption := 'State Watch';
-  Width := 840;
-  Height := 560;
-
-  pcState := TPageControl.Create(Self);
-  pcState.Parent := Self;
-  pcState.Left := 8;
-  pcState.Top := 8;
-  pcState.Width := 804;
-  pcState.Height := 440;
-
-  tsFlagsVars := TTabSheet.Create(pcState);
-  tsFlagsVars.PageControl := pcState;
-  tsFlagsVars.Caption := 'Flags / Vars';
-
-  tsState := TTabSheet.Create(pcState);
-  tsState.PageControl := pcState;
-  tsState.Caption := 'State';
-
-  tsSkills := TTabSheet.Create(pcState);
-  tsSkills.PageControl := pcState;
-  tsSkills.Caption := 'Skills';
-
-  tsQuests := TTabSheet.Create(pcState);
-  tsQuests.PageControl := pcState;
-  tsQuests.Caption := 'Quests';
-
-  tsRumors := TTabSheet.Create(pcState);
-  tsRumors.PageControl := pcState;
-  tsRumors.Caption := 'Rumors';
-
-  gvFlags := TStringGrid.Create(Self);
-  gvFlags.Parent := tsFlagsVars;
-  gvFlags.Align := alClient;
-
-  gvVars := TStringGrid.Create(Self);
-  gvVars.Parent := tsFlagsVars;
-  gvVars.Align := alRight;
-  gvVars.Left := 400;
-  gvVars.Width := 390;
-
-  gvState := TStringGrid.Create(Self);
-  gvState.Parent := tsState;
-  gvState.Align := alClient;
-
-  gvSkills := TStringGrid.Create(Self);
-  gvSkills.Parent := tsSkills;
-  gvSkills.Align := alClient;
-
-  gvQuests := TStringGrid.Create(Self);
-  gvQuests.Parent := tsQuests;
-  gvQuests.Align := alClient;
-
-  gvRumors := TStringGrid.Create(Self);
-  gvRumors.Parent := tsRumors;
-  gvRumors.Align := alClient;
-
-  btnRefresh := TButton.Create(Self);
-  btnRefresh.Parent := Self;
-  btnRefresh.Left := 520;
-  btnRefresh.Top := 460;
-  btnRefresh.Width := 120;
-  btnRefresh.Height := 28;
-  btnRefresh.Caption := 'Refresh';
-  btnRefresh.OnClick := btnRefreshClick;
-
-  btnClose := TButton.Create(Self);
-  btnClose.Parent := Self;
-  btnClose.Left := 656;
-  btnClose.Top := 460;
-  btnClose.Width := 120;
-  btnClose.Height := 28;
-  btnClose.Caption := 'Close';
-  btnClose.OnClick := btnCloseClick;
-
   InitGrid(gvFlags, ['Index', 'Value']);
   InitGrid(gvVars, ['Index', 'Value']);
   InitGrid(gvState, ['Property', 'Value']);
   InitGrid(gvSkills, ['Skill', 'Rank']);
   InitGrid(gvQuests, ['Quest', 'State']);
   InitGrid(gvRumors, ['Rumor', 'Known']);
-end;
-
-destructor TfrmStateWatch.Destroy;
-begin
-  inherited;
 end;
 
 procedure TfrmStateWatch.InitGrid(Grid: TStringGrid; const Captions: array of string);
@@ -196,36 +104,35 @@ var
   I: Integer;
 begin
   if not Assigned(FEngine) then Exit;
-  I := 1;
   gvState.RowCount := 15;
-  gvState.Cells[0, I] := 'Gold';
-  gvState.Cells[1, I] := IntToStr(FEngine.Gold); Inc(I);
-  gvState.Cells[0, I] := 'Alignment';
-  gvState.Cells[1, I] := IntToStr(FEngine.Alignment); Inc(I);
-  gvState.Cells[0, I] := 'Charisma';
-  gvState.Cells[1, I] := IntToStr(FEngine.Charisma); Inc(I);
-  gvState.Cells[0, I] := 'Perception';
-  gvState.Cells[1, I] := IntToStr(FEngine.Perception); Inc(I);
-  gvState.Cells[0, I] := 'Persuasion';
-  gvState.Cells[1, I] := IntToStr(FEngine.Persuasion); Inc(I);
-  gvState.Cells[0, I] := 'Reaction';
-  gvState.Cells[1, I] := IntToStr(FEngine.Reaction); Inc(I);
-  gvState.Cells[0, I] := 'Story State';
-  gvState.Cells[1, I] := IntToStr(FEngine.StoryState); Inc(I);
-  gvState.Cells[0, I] := 'PC Level';
-  gvState.Cells[1, I] := IntToStr(FEngine.PCLevel); Inc(I);
-  gvState.Cells[0, I] := 'Magic Aptitude';
-  gvState.Cells[1, I] := IntToStr(FEngine.MagicAptitude); Inc(I);
-  gvState.Cells[0, I] := 'Tech Aptitude';
-  gvState.Cells[1, I] := IntToStr(FEngine.TechAptitude); Inc(I);
-  gvState.Cells[0, I] := 'Counter 0';
-  gvState.Cells[1, I] := IntToStr(FEngine.Counter[0]); Inc(I);
-  gvState.Cells[0, I] := 'Counter 1';
-  gvState.Cells[1, I] := IntToStr(FEngine.Counter[1]); Inc(I);
-  gvState.Cells[0, I] := 'Counter 2';
-  gvState.Cells[1, I] := IntToStr(FEngine.Counter[2]); Inc(I);
-  gvState.Cells[0, I] := 'Counter 3';
-  gvState.Cells[1, I] := IntToStr(FEngine.Counter[3]); Inc(I);
+  gvState.Cells[0, 1] := 'Gold';
+  gvState.Cells[1, 1] := IntToStr(FEngine.Gold);
+  gvState.Cells[0, 2] := 'Alignment';
+  gvState.Cells[1, 2] := IntToStr(FEngine.Alignment);
+  gvState.Cells[0, 3] := 'Charisma';
+  gvState.Cells[1, 3] := IntToStr(FEngine.Charisma);
+  gvState.Cells[0, 4] := 'Perception';
+  gvState.Cells[1, 4] := IntToStr(FEngine.Perception);
+  gvState.Cells[0, 5] := 'Persuasion';
+  gvState.Cells[1, 5] := IntToStr(FEngine.Persuasion);
+  gvState.Cells[0, 6] := 'Reaction';
+  gvState.Cells[1, 6] := IntToStr(FEngine.Reaction);
+  gvState.Cells[0, 7] := 'Story State';
+  gvState.Cells[1, 7] := IntToStr(FEngine.StoryState);
+  gvState.Cells[0, 8] := 'PC Level';
+  gvState.Cells[1, 8] := IntToStr(FEngine.PCLevel);
+  gvState.Cells[0, 9] := 'Magic Aptitude';
+  gvState.Cells[1, 9] := IntToStr(FEngine.MagicAptitude);
+  gvState.Cells[0, 10] := 'Tech Aptitude';
+  gvState.Cells[1, 10] := IntToStr(FEngine.TechAptitude);
+  gvState.Cells[0, 11] := 'Counter 0';
+  gvState.Cells[1, 11] := IntToStr(FEngine.Counter[0]);
+  gvState.Cells[0, 12] := 'Counter 1';
+  gvState.Cells[1, 12] := IntToStr(FEngine.Counter[1]);
+  gvState.Cells[0, 13] := 'Counter 2';
+  gvState.Cells[1, 13] := IntToStr(FEngine.Counter[2]);
+  gvState.Cells[0, 14] := 'Counter 3';
+  gvState.Cells[1, 14] := IntToStr(FEngine.Counter[3]);
 end;
 
 procedure TfrmStateWatch.RefreshSkills;
@@ -240,6 +147,12 @@ begin
     gvSkills.Cells[1, I] := IntToStr(FEngine.Skill[I]);
   end;
 end;
+
+const
+  SkillNames: array[0..15] of string = (
+    'Bow', 'Dodge', 'Melee', 'Throwing', 'Concealment', 'Pick Pocket',
+    'Silent Move', 'Spot Trap', 'Gambling', 'Haggle', 'Heal', 'Persuasion',
+    'Repair', 'Firearms', 'Pick Lock', 'Arm Trap');
 
 procedure TfrmStateWatch.RefreshQuests;
 var
