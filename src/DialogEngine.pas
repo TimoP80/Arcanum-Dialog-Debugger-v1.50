@@ -59,12 +59,26 @@ type
     procedure LoadDialog(const FilePath: string);
     procedure SelectNode(const NodeName: string);
     procedure EvaluateOptions(out ValidOptions: TList<TPlayerOption>);
-
     procedure SelectOption(Option: TPlayerOption);
 
     property CurrentNode: TDialogueNode read FCurrentNode;
     property GlobalFlags: TDictionary<Integer, Boolean> read FGlobalFlags;
     property LocalFlags: TDictionary<Integer, Boolean> read FLocalFlags;
+    property GlobalVars: TDictionary<Integer, Integer> read FGlobalVars;
+    property LocalVars: TDictionary<Integer, Integer> read FLocalVars;
+    property Quests: TDictionary<Integer, Integer> read FQuests;
+    property Counters: array[0..3] of Integer read FCounters;
+    property Gold: Integer read FGold write FGold;
+    property Charisma: Integer read FCharisma write FCharisma;
+    property Perception: Integer read FPerception write FPerception;
+    property Persuasion: Integer read FPersuasion write FPersuasion;
+    property Reaction: Integer read FReaction write FReaction;
+    property Alignment: Integer read FPlayerAlignment write FPlayerAlignment;
+    property StoryState: Integer read FStoryState write FStoryState;
+    property PCLevel: Integer read FPlayerLevel write FPlayerLevel;
+    property MagicAptitude: Integer read FMagicAptitude write FMagicAptitude;
+    property TechAptitude: Integer read FTechAptitude write FTechAptitude;
+    property Skills: array[0..15] of Integer read FPCBuzz;
   end;
 
 implementation
@@ -101,6 +115,9 @@ begin
   FCurrentArea := 0;
   FCurrentNPC := 0;
   FCurrentBuzz := -1;
+  FPlayerLevel := 1;
+  FMagicAptitude := 0;
+  FTechAptitude := 0;
 end;
 
 destructor TDialogEngine.Destroy;
@@ -164,7 +181,6 @@ end;
 function TDialogEngine.FindLineInNodes(TargetLine: Integer): TDialogueNode;
 var
   Node: TDialogueNode;
-  LineNum: Integer;
 begin
   for Node in FDialogNodes do
   begin
@@ -215,7 +231,6 @@ end;
 procedure TDialogEngine.SelectOption(Option: TPlayerOption);
 var
   NextNode: TDialogueNode;
-  OptIndex: Integer;
 begin
   ExecuteResults(Option.Results);
 
