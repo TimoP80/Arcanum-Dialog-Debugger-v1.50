@@ -11,20 +11,17 @@ type
   TfrmModuleManager = class(TForm)
     pnlModules: TPanel;
     lbModules: TListBox;
-    btnLoadFolder: TButton;
-    btnLoadDAT: TButton;
+    btnLoadModule: TButton;
     btnClose: TButton;
-    OpenDialog1: TOpenDialog;
     procedure FormCreate(Sender: TObject);
-    procedure btnLoadFolderClick(Sender: TObject);
-    procedure btnLoadDATClick(Sender: TObject);
+    procedure btnLoadModuleClick(Sender: TObject);
     procedure lbModulesDblClick(Sender: TObject);
     procedure btnCloseClick(Sender: TObject);
   private
     FEngine: TDialogEngine;
     FModuleRoot: string;
     procedure ScanModules;
-    procedure LoadModule(const Path: string);
+    procedure LoadModule(const Name: string);
   public
     procedure BindEngine(Engine: TDialogEngine);
   end;
@@ -35,7 +32,6 @@ implementation
 
 procedure TfrmModuleManager.FormCreate(Sender: TObject);
 begin
-  FModuleRoot := '';
   lbModules.Clear;
 end;
 
@@ -59,52 +55,29 @@ begin
   end;
 end;
 
-procedure TfrmModuleManager.LoadModule(const Path: string);
+procedure TfrmModuleManager.LoadModule(const Name: string);
 var
-  FullPath: string;
+  Path: string;
 begin
-  if SameText(Path, 'Arcanum') then
-    FullPath := TPath.Combine(FModuleRoot, 'Arcanum')
+  if SameText(Name, 'Arcanum') then
+    Path := TPath.Combine(FModuleRoot, 'Arcanum')
   else
-    FullPath := TPath.Combine(FModuleRoot, Path);
+    Path := TPath.Combine(FModuleRoot, Name);
 
-  if TFile.Exists(FullPath) then
-  begin
-    if not LoadModuleData(FullPath) then
-      raise Exception.CreateFmt('Failed to load module DAT: %s', [FullPath]);
-  end
-  else if DirectoryExists(FullPath) then
-  begin
-    if not LoadModuleData(FullPath) then
-      raise Exception.CreateFmt('Failed to load module folder: %s', [FullPath]);
-  end
-  else
-    raise Exception.CreateFmt('Module path not found: %s', [FullPath]);
+  if not DirectoryExists(Path) then
+    raise Exception.CreateFmt('Module folder not found: %s', [Path]);
 
+  LoadModuleData(Path);
   if Assigned(FEngine) then
     FEngine.LoadDialog('');
 
   ModalResult := mrOk;
 end;
 
-procedure TfrmModuleManager.btnLoadFolderClick(Sender: TObject);
-var
-  Folder: string;
+procedure TfrmModuleManager.btnLoadModuleClick(Sender: TObject);
 begin
-  if TDirectory.SelectDirectory('Select module folder', '', Folder) then
-  begin
-    FModuleRoot := Folder;
-    ScanModules;
-  end;
-end;
-
-procedure TfrmModuleManager.btnLoadDATClick(Sender: TObject);
-begin
-  if OpenDialog1.Execute then
-  begin
-    FModuleRoot := ExtractFilePath(OpenDialog1.FileName);
-    ScanModules;
-  end;
+  if lbModules.ItemIndex >= 0 then
+    LoadModule(lbModules.Items[lbModules.ItemIndex]);
 end;
 
 procedure TfrmModuleManager.lbModulesDblClick(Sender: TObject);

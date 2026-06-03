@@ -32,7 +32,6 @@ object frmStateWatch: TfrmStateWatch
         Width = 296
         Height = 352
         ColCount = 2
-        DefaultDrawing = True
         FixedCols = 0
         RowCount = 2
         FixedRows = 1
@@ -47,7 +46,6 @@ object frmStateWatch: TfrmStateWatch
         Width = 296
         Height = 352
         ColCount = 2
-        DefaultDrawing = True
         FixedCols = 0
         RowCount = 2
         FixedRows = 1
@@ -65,7 +63,6 @@ object frmStateWatch: TfrmStateWatch
         Width = 600
         Height = 352
         ColCount = 2
-        DefaultDrawing = True
         FixedCols = 0
         RowCount = 2
         FixedRows = 1
@@ -83,7 +80,6 @@ object frmStateWatch: TfrmStateWatch
         Width = 600
         Height = 352
         ColCount = 2
-        DefaultDrawing = True
         FixedCols = 0
         RowCount = 2
         FixedRows = 1
@@ -101,7 +97,6 @@ object frmStateWatch: TfrmStateWatch
         Width = 600
         Height = 352
         ColCount = 2
-        DefaultDrawing = True
         FixedCols = 0
         RowCount = 2
         FixedRows = 1
@@ -119,7 +114,6 @@ object frmStateWatch: TfrmStateWatch
         Width = 600
         Height = 352
         ColCount = 2
-        DefaultDrawing = True
         FixedCols = 0
         RowCount = 2
         FixedRows = 1

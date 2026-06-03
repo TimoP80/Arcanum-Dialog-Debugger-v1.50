@@ -60,6 +60,24 @@ object frmMain: TfrmMain
       TabOrder = 0
       OnClick = btnLoadDLGClick
     end
+    object btnOpenModule: TButton
+      Left = 112
+      Top = 8
+      Width = 100
+      Height = 25
+      Caption = 'Module Manager'
+      TabOrder = 1
+      OnClick = btnOpenModuleClick
+    end
+    object btnStateWatch: TButton
+      Left = 216
+      Top = 8
+      Width = 100
+      Height = 25
+      Caption = 'State Watch'
+      TabOrder = 2
+      OnClick = btnStateWatchClick
+    end
   end
   object lbNPCLine: TListBox
     Left = 0

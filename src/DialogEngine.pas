@@ -19,7 +19,6 @@ type
     FPCVariables: TDictionary<Integer, Integer>;
     FPCFlags: TDictionary<Integer, Boolean>;
     FCounters: array[0..3] of Integer;
-
     FPlayerReputation: Integer;
     FPlayerReputations: TList<Integer>;
     FPlayerAlignment: Integer;
@@ -39,35 +38,34 @@ type
     FCurrentBuzz: Integer;
     FCurrentArea: Integer;
     FCurrentNPC: Integer;
+    function GetCounter(Index: Integer): Integer;
+    procedure SetCounter(Index: Integer; const Value: Integer);
+    function GetSkill(Index: Integer): Integer;
+    procedure SetSkill(Index: Integer; const Value: Integer);
   public
     type
       TSkill = (SkillBow = 0, SkillDodge, SkillMelee, SkillThrowing, SkillConcealment,
         SkillPickPocket, SkillSilentMove, SkillSpotTrap, SkillGambling, SkillHaggle,
         SkillHeal, SkillPersuasion, SkillRepair, SkillFirearms, SkillPickLock, SkillArmTrap);
-
     procedure ExecuteScript(const ScriptName: string);
     function EvaluateCondition(ConditionLine: scrline): Boolean;
     procedure ExecuteAction(ActionLine: scrline);
     function EvaluateTests(const TestStr: string): Boolean;
     procedure ExecuteResults(const ResultStr: string);
     function FindLineInNodes(TargetLine: Integer): TDialogueNode;
-
-  public
     constructor Create;
     destructor Destroy; override;
-
     procedure LoadDialog(const FilePath: string);
     procedure SelectNode(const NodeName: string);
     procedure EvaluateOptions(out ValidOptions: TList<TPlayerOption>);
     procedure SelectOption(Option: TPlayerOption);
-
     property CurrentNode: TDialogueNode read FCurrentNode;
     property GlobalFlags: TDictionary<Integer, Boolean> read FGlobalFlags;
     property LocalFlags: TDictionary<Integer, Boolean> read FLocalFlags;
     property GlobalVars: TDictionary<Integer, Integer> read FGlobalVars;
     property LocalVars: TDictionary<Integer, Integer> read FLocalVars;
     property Quests: TDictionary<Integer, Integer> read FQuests;
-    property Counters: array[0..3] of Integer read FCounters;
+    property Counter[Index: Integer]: Integer read GetCounter write SetCounter;
     property Gold: Integer read FGold write FGold;
     property Charisma: Integer read FCharisma write FCharisma;
     property Perception: Integer read FPerception write FPerception;
@@ -78,12 +76,43 @@ type
     property PCLevel: Integer read FPlayerLevel write FPlayerLevel;
     property MagicAptitude: Integer read FMagicAptitude write FMagicAptitude;
     property TechAptitude: Integer read FTechAptitude write FTechAptitude;
-    property Skills: array[0..15] of Integer read FPCBuzz;
+    property Skill[Index: Integer]: Integer read GetSkill write SetSkill;
+    property PlayerReputation: Integer read FPlayerReputation write FPlayerReputation;
+    property PlayerReputations: TList<Integer> read FPlayerReputations;
+    property Rumors: TDictionary<Integer, Boolean> read FRumors;
   end;
 
 implementation
 
 { TDialogEngine }
+
+function TDialogEngine.GetCounter(Index: Integer): Integer;
+begin
+  if (Index >= 0) and (Index <= 3) then
+    Result := FCounters[Index]
+  else
+    Result := 0;
+end;
+
+procedure TDialogEngine.SetCounter(Index: Integer; const Value: Integer);
+begin
+  if (Index >= 0) and (Index <= 3) then
+    FCounters[Index] := Value;
+end;
+
+function TDialogEngine.GetSkill(Index: Integer): Integer;
+begin
+  if (Index >= 0) and (Index <= 15) then
+    Result := FPCBuzz[Index]
+  else
+    Result := 0;
+end;
+
+procedure TDialogEngine.SetSkill(Index: Integer; const Value: Integer);
+begin
+  if (Index >= 0) and (Index <= 15) then
+    FPCBuzz[Index] := Value;
+end;
 
 constructor TDialogEngine.Create;
 begin
@@ -98,12 +127,11 @@ begin
   FPCFlags := TDictionary<Integer, Boolean>.Create;
   FRumors := TDictionary<Integer, Boolean>.Create;
   FPlayerReputations := TList<Integer>.Create;
-
   FCounters[0] := 0;
   FCounters[1] := 0;
   FCounters[2] := 0;
   FCounters[3] := 0;
-
+  FPlayerReputation := 0;
   FPlayerAlignment := 0;
   FGold := 500;
   FCharisma := 10;
@@ -205,7 +233,6 @@ begin
   for Option in FCurrentNode.PlayerOptions do
   begin
     Passed := EvaluateTests(Option.Tests);
-
     if Passed then
       ValidOptions.Add(Option);
   end;
