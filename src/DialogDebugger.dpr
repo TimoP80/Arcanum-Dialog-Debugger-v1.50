@@ -6,8 +6,7 @@ uses
   DialogEngine in 'DialogEngine.pas',
   DialogueParser in 'DialogueParser.pas',
   ArcanumSCRLib in 'ArcanumSCRLib.pas',
-
-
+  ModuleManager in 'ModuleManager.pas' {frmModuleManager};
 
 begin
   Application.Initialize;
