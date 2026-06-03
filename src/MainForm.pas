@@ -4,7 +4,8 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ExtCtrls, DialogEngine, DialogueParser, System.Generics.Collections;
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ExtCtrls, DialogEngine,
+  DialogueParser, System.Generics.Collections;
 
 type
   TfrmMain = class(TForm)
@@ -100,13 +101,23 @@ end;
 
 procedure TfrmMain.lbPlayerOptionsDblClick(Sender: TObject);
 var
-  TargetLine: Integer;
+  OptIndex: Integer;
+  Option: TPlayerOption;
 begin
   if lbPlayerOptions.ItemIndex >= 0 then
   begin
-    TargetLine := Integer(lbPlayerOptions.Items.Objects[lbPlayerOptions.ItemIndex]);
-    LogDebug('Selected option jumping to line: ' + IntToStr(TargetLine));
-    // Implement jumping logic in FEngine
+    OptIndex := lbPlayerOptions.ItemIndex;
+    if (OptIndex >= 0) and (OptIndex < FEngine.CurrentNode.PlayerOptions.Count) then
+    begin
+      Option := FEngine.CurrentNode.PlayerOptions[OptIndex];
+      LogDebug(Format('Selected option [%d] jumping to line: %d', [OptIndex, Option.TargetLine]));
+      FEngine.SelectOption(Option);
+      RefreshUI;
+    end
+    else
+    begin
+      LogDebug('Selected option index out of range: ' + IntToStr(OptIndex));
+    end;
   end;
 end;
 
