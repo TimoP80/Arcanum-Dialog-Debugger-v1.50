@@ -1,3 +1,5 @@
+<img width="1024" height="1024" alt="ChatGPT Image 3 6 2026 klo 11 16 15" src="https://github.com/user-attachments/assets/6dfa5198-55de-4eea-890c-6cf166c43f5d" />
+
 # Arcanum Dialog Debugger
 
 A Delphi / VCL CLI tool for parsing, evaluating, and stepping through Arcanum dialog files (`.dlg`).
