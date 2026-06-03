@@ -5,7 +5,7 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Grids, Vcl.StdCtrls, System.Generics.Collections,
-  DialogEngine;
+  System.Math, DialogEngine;
 
 type
   TfrmStateWatch = class(TForm)
@@ -41,6 +41,16 @@ type
 implementation
 
 {$R *.dfm}
+
+uses System.Math;
+
+const
+  SkillNames: array[0..15] of string = (
+    'Bow', 'Dodge', 'Melee', 'Throwing', 'Concealment', 'Pick Pocket',
+    'Silent Move', 'Spot Trap', 'Gambling', 'Haggle', 'Heal', 'Persuasion',
+    'Repair', 'Firearms', 'Pick Lock', 'Arm Trap');
+
+{ TfrmStateWatch }
 
 procedure TfrmStateWatch.FormCreate(Sender: TObject);
 begin
@@ -147,12 +157,6 @@ begin
     gvSkills.Cells[1, I] := IntToStr(FEngine.Skill[I]);
   end;
 end;
-
-const
-  SkillNames: array[0..15] of string = (
-    'Bow', 'Dodge', 'Melee', 'Throwing', 'Concealment', 'Pick Pocket',
-    'Silent Move', 'Spot Trap', 'Gambling', 'Haggle', 'Heal', 'Persuasion',
-    'Repair', 'Firearms', 'Pick Lock', 'Arm Trap');
 
 procedure TfrmStateWatch.RefreshQuests;
 var
