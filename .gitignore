@@ -1,0 +1,16 @@
+# Delphi compiled files
+*.dcu
+*.exe
+*.dll
+*.dproj.local
+*.identcache
+*.bak
+
+# Build outputs
+src/*.dcu
+src/*.exe
+src/__recovery/
+
+# IDE
+.idea/
+.vscode/
