@@ -35,6 +35,7 @@ implementation
 
 procedure TfrmModuleManager.FormCreate(Sender: TObject);
 begin
+  FModuleRoot := '';
   lbModules.Clear;
 end;
 
@@ -67,14 +68,21 @@ begin
   else
     FullPath := TPath.Combine(FModuleRoot, Path);
 
-  if not DirectoryExists(FullPath) then
-    raise Exception.CreateFmt('Module folder not found: %s', [FullPath]);
-
-  LoadModuleData(FullPath);
-  if Assigned(FEngine) then
+  if TFile.Exists(FullPath) then
   begin
+    if not LoadModuleData(FullPath) then
+      raise Exception.CreateFmt('Failed to load module DAT: %s', [FullPath]);
+  end
+  else if DirectoryExists(FullPath) then
+  begin
+    if not LoadModuleData(FullPath) then
+      raise Exception.CreateFmt('Failed to load module folder: %s', [FullPath]);
+  end
+  else
+    raise Exception.CreateFmt('Module path not found: %s', [FullPath]);
+
+  if Assigned(FEngine) then
     FEngine.LoadDialog('');
-  end;
 
   ModalResult := mrOk;
 end;
@@ -84,13 +92,19 @@ var
   Folder: string;
 begin
   if TDirectory.SelectDirectory('Select module folder', '', Folder) then
-    LoadModule(Folder);
+  begin
+    FModuleRoot := Folder;
+    ScanModules;
+  end;
 end;
 
 procedure TfrmModuleManager.btnLoadDATClick(Sender: TObject);
 begin
   if OpenDialog1.Execute then
-    LoadModule(OpenDialog1.FileName);
+  begin
+    FModuleRoot := ExtractFilePath(OpenDialog1.FileName);
+    ScanModules;
+  end;
 end;
 
 procedure TfrmModuleManager.lbModulesDblClick(Sender: TObject);

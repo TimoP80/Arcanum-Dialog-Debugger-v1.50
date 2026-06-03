@@ -42,8 +42,6 @@ implementation
 
 {$R *.dfm}
 
-{ TfrmStateWatch }
-
 procedure TfrmStateWatch.FormCreate(Sender: TObject);
 begin
   InitGrid(gvFlags, ['Index', 'Value']);
@@ -78,7 +76,6 @@ var
   I: Integer;
 begin
   if not Assigned(FEngine) then Exit;
-
   gvFlags.RowCount := Max(2, FEngine.GlobalFlags.Count + 1);
   gvFlags.Rows[1].Clear;
   gvFlags.RowCount := 2;
@@ -175,13 +172,13 @@ var
   Keys: TArray<Integer>;
 begin
   if not Assigned(FEngine) then Exit;
-  Keys := FRumors.Keys.ToArray;
+  Keys := FEngine.Rumors.Keys.ToArray;
   TArray.Sort<Integer>(Keys);
   gvRumors.RowCount := Max(2, Length(Keys) + 1);
   for I := 0 to High(Keys) do
   begin
     gvRumors.Cells[0, I + 1] := IntToStr(Keys[I]);
-    gvRumors.Cells[1, I + 1] := BoolToStr(FRumors[Keys[I]], True);
+    gvRumors.Cells[1, I + 1] := BoolToStr(FEngine.Rumors[Keys[I]], True);
   end;
 end;
 
