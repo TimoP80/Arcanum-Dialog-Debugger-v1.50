@@ -20,10 +20,13 @@ type
   private
     FEngine: TDialogEngine;
     FModuleRoot: string;
+    FRootSet: Boolean;
     procedure ScanModules;
     procedure LoadModule(const Name: string);
   public
     procedure BindEngine(Engine: TDialogEngine);
+    function SetModuleRoot(const Path: string): Boolean;
+    property ModuleRoot: string read FModuleRoot;
   end;
 
 implementation
@@ -33,17 +36,32 @@ implementation
 procedure TfrmModuleManager.FormCreate(Sender: TObject);
 begin
   lbModules.Clear;
+  FRootSet := False;
 end;
 
 procedure TfrmModuleManager.BindEngine(Engine: TDialogEngine);
 begin
   FEngine := Engine;
+  if FRootSet then
+    ScanModules;
+end;
+
+function TfrmModuleManager.SetModuleRoot(const Path: string): Boolean;
+begin
+  Result := False;
+  if (Path = '') or (not DirectoryExists(Path)) then
+    Exit;
+  FModuleRoot := IncludeTrailingPathDelimiter(Path);
+  FRootSet := True;
+  Result := True;
+  if Assigned(FEngine) then
+    ScanModules;
 end;
 
 procedure TfrmModuleManager.ScanModules;
 begin
   lbModules.Clear;
-  if not DirectoryExists(FModuleRoot) then Exit;
+  if not FRootSet or (FModuleRoot = '') or (not DirectoryExists(FModuleRoot)) then Exit;
 
   lbModules.Items.Add('Arcanum');
   for var Dir in TDirectory.GetDirectories(FModuleRoot) do

@@ -5,11 +5,14 @@
 *.dproj.local
 *.identcache
 *.bak
+*.otares
+*.drescan
 
 # Build outputs
 src/*.dcu
 src/*.exe
 src/__recovery/
+src/__history/
 
 # IDE
 .idea/

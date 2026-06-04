@@ -5,7 +5,8 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ExtCtrls, DialogEngine,
-  DialogueParser, System.Generics.Collections, StateWatch, ModuleManager;
+  DialogueParser, System.Generics.Collections, StateWatch, ModuleManager, Preferences,
+  Vcl.XPMan;
 
 type
   TfrmMain = class(TForm)
@@ -13,6 +14,7 @@ type
     btnLoadDLG: TButton;
     btnOpenModule: TButton;
     btnStateWatch: TButton;
+    btnPreferences: TButton;
     OpenDialog1: TOpenDialog;
     lbNPCLine: TListBox;
     lbPlayerOptions: TListBox;
@@ -21,20 +23,24 @@ type
     mmoDebug: TMemo;
     Label1: TLabel;
     Label2: TLabel;
+    XPManifest1: TXPManifest;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure btnLoadDLGClick(Sender: TObject);
   procedure btnOpenModuleClick(Sender: TObject);
   procedure btnStateWatchClick(Sender: TObject);
+  procedure btnPreferencesClick(Sender: TObject);
   procedure lbPlayerOptionsDblClick(Sender: TObject);
   private
     FEngine: TDialogEngine;
     FStateWatch: TfrmStateWatch;
     FModuleManager: TfrmModuleManager;
+    FPreferences: TPreferences;
     procedure RefreshUI;
     procedure LogDebug(const Msg: string);
     procedure OpenStateWatch;
     procedure OpenModuleManager;
+    procedure ApplyPreferences;
   public
   end;
 
@@ -51,10 +57,14 @@ begin
   FStateWatch := TfrmStateWatch.Create(Self);
   FStateWatch.BindEngine(FEngine);
   FModuleManager := TfrmModuleManager.Create(Self);
+
+  FPreferences := TPreferences.Create;
+  ApplyPreferences;
 end;
 
 procedure TfrmMain.FormDestroy(Sender: TObject);
 begin
+  FPreferences.Free;
   FModuleManager.Free;
   FStateWatch.Free;
   FEngine.Free;
@@ -62,18 +72,41 @@ end;
 
 procedure TfrmMain.LogDebug(const Msg: string);
 begin
+  if Assigned(FPreferences) and (not FPreferences.DebugLogging) then
+    Exit;
   mmoDebug.Lines.Add(Msg);
 end;
 
 procedure TfrmMain.OpenModuleManager;
 begin
   FModuleManager.BindEngine(FEngine);
+  if Assigned(FPreferences) and (FPreferences.ArcanumPath <> '') then
+  begin
+    if not FModuleManager.SetModuleRoot(FPreferences.ArcanumPath) then
+    begin
+      ShowMessage('Arcanum path not set or invalid. Open Preferences to configure it.');
+      Exit;
+    end;
+  end
+  else
+  begin
+    ShowMessage('Arcanum path not set. Open Preferences to configure it.');
+    Exit;
+  end;
   FModuleManager.Show;
 end;
 
 procedure TfrmMain.OpenStateWatch;
 begin
   FStateWatch.Show;
+end;
+
+procedure TfrmMain.ApplyPreferences;
+begin
+  if (FPreferences.LastDLGFolder <> '') and System.SysUtils.DirectoryExists(FPreferences.LastDLGFolder) then
+    OpenDialog1.InitialDir := FPreferences.LastDLGFolder
+  else
+    OpenDialog1.InitialDir := ExtractFilePath(ParamStr(0));
 end;
 
 procedure TfrmMain.btnLoadDLGClick(Sender: TObject);
@@ -83,6 +116,11 @@ begin
     try
       FEngine.LoadDialog(OpenDialog1.FileName);
       LogDebug('Loaded DLG: ' + OpenDialog1.FileName);
+      if Assigned(FPreferences) then
+      begin
+        FPreferences.LastDLGFolder := ExtractFilePath(OpenDialog1.FileName);
+        FPreferences.Save;
+      end;
       RefreshUI;
     except
       on E: Exception do
@@ -99,6 +137,15 @@ end;
 procedure TfrmMain.btnOpenModuleClick(Sender: TObject);
 begin
   OpenModuleManager;
+end;
+
+procedure TfrmMain.btnPreferencesClick(Sender: TObject);
+begin
+  if TfrmPreferences.Edit(FPreferences) then
+  begin
+    ApplyPreferences;
+    LogDebug('Preferences updated.');
+  end;
 end;
 
 procedure TfrmMain.RefreshUI;

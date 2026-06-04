@@ -10,10 +10,8 @@ object frmMain: TfrmMain
   Font.Height = -11
   Font.Name = 'Tahoma'
   Font.Style = []
-  OldCreateOrder = False
   OnCreate = FormCreate
   OnDestroy = FormDestroy
-  PixelsPerInch = 96
   TextHeight = 13
   object Splitter1: TSplitter
     Left = 0
@@ -32,7 +30,7 @@ object frmMain: TfrmMain
     Height = 13
     Align = alTop
     Caption = 'NPC Dialogue:'
-    ExplicitWidth = 66
+    ExplicitWidth = 68
   end
   object Label2: TLabel
     Left = 0
@@ -41,7 +39,6 @@ object frmMain: TfrmMain
     Height = 13
     Align = alTop
     Caption = 'Player Options:'
-    ExplicitTop = 224
     ExplicitWidth = 74
   end
   object Panel1: TPanel
@@ -75,8 +72,17 @@ object frmMain: TfrmMain
       Width = 100
       Height = 25
       Caption = 'State Watch'
-      TabOrder = 3
+      TabOrder = 2
       OnClick = btnStateWatchClick
+    end
+    object btnPreferences: TButton
+      Left = 428
+      Top = 8
+      Width = 100
+      Height = 25
+      Caption = 'Preferences...'
+      TabOrder = 3
+      OnClick = btnPreferencesClick
     end
   end
   object lbNPCLine: TListBox
@@ -122,5 +128,9 @@ object frmMain: TfrmMain
     Filter = 'Dialog Files (*.dlg)|*.dlg|All Files (*.*)|*.*'
     Left = 144
     Top = 8
+  end
+  object XPManifest1: TXPManifest
+    Left = 616
+    Top = 312
   end
 end

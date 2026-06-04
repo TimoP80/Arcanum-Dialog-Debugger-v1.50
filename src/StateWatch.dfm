@@ -1,7 +1,6 @@
 object frmStateWatch: TfrmStateWatch
   Left = 0
   Top = 0
-  BorderStyle = bsSizeable
   Caption = 'State Watch'
   ClientHeight = 480
   ClientWidth = 640
@@ -26,16 +25,18 @@ object frmStateWatch: TfrmStateWatch
     TabOrder = 0
     object tsFlagsVars: TTabSheet
       Caption = 'Flags / Vars'
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object gvFlags: TStringGrid
         Left = 8
         Top = 8
         Width = 296
         Height = 352
         ColCount = 2
-        DefaultDrawing = True
         FixedCols = 0
         RowCount = 2
-        FixedRows = 1
         TabOrder = 0
         ColWidths = (
           80
@@ -47,10 +48,8 @@ object frmStateWatch: TfrmStateWatch
         Width = 296
         Height = 352
         ColCount = 2
-        DefaultDrawing = True
         FixedCols = 0
         RowCount = 2
-        FixedRows = 1
         TabOrder = 1
         ColWidths = (
           80
@@ -59,16 +58,18 @@ object frmStateWatch: TfrmStateWatch
     end
     object tsState: TTabSheet
       Caption = 'State'
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object gvState: TStringGrid
         Left = 8
         Top = 8
         Width = 600
         Height = 352
         ColCount = 2
-        DefaultDrawing = True
         FixedCols = 0
         RowCount = 2
-        FixedRows = 1
         TabOrder = 0
         ColWidths = (
           152
@@ -77,16 +78,18 @@ object frmStateWatch: TfrmStateWatch
     end
     object tsSkills: TTabSheet
       Caption = 'Skills'
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object gvSkills: TStringGrid
         Left = 8
         Top = 8
         Width = 600
         Height = 352
         ColCount = 2
-        DefaultDrawing = True
         FixedCols = 0
         RowCount = 2
-        FixedRows = 1
         TabOrder = 0
         ColWidths = (
           200
@@ -95,16 +98,18 @@ object frmStateWatch: TfrmStateWatch
     end
     object tsQuests: TTabSheet
       Caption = 'Quests'
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object gvQuests: TStringGrid
         Left = 8
         Top = 8
         Width = 600
         Height = 352
         ColCount = 2
-        DefaultDrawing = True
         FixedCols = 0
         RowCount = 2
-        FixedRows = 1
         TabOrder = 0
         ColWidths = (
           120
@@ -113,16 +118,18 @@ object frmStateWatch: TfrmStateWatch
     end
     object tsRumors: TTabSheet
       Caption = 'Rumors'
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object gvRumors: TStringGrid
         Left = 8
         Top = 8
         Width = 600
         Height = 352
         ColCount = 2
-        DefaultDrawing = True
         FixedCols = 0
         RowCount = 2
-        FixedRows = 1
         TabOrder = 0
         ColWidths = (
           120

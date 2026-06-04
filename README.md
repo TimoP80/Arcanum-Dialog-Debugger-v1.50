@@ -13,10 +13,26 @@ A Delphi / VCL CLI tool for parsing, evaluating, and stepping through Arcanum di
 - Generated-dialog commands (A–Z, Q, I, R, G, M) recognized and parsed
 - Line-to-node resolution for `TargetLine` jumps
 - Debug logging of state transitions
+- Preferences dialog (`Preferences...` button) for configuring the Arcanum install path, last-used DLG folder, verbose debug output, debug logging, and dialog line-number step
+- Persistent configuration stored in `DialogDebugger.ini` next to the executable
 
 ## Building
 
 Open `src/DialogDebugger.dproj` in Delphi (Win32) and build.
+
+## Configuration
+
+Settings are read from and written to `DialogDebugger.ini` next to `DialogDebugger.exe`. On first launch, open **Preferences...** and set the Arcanum install path so the Module Manager can locate the game's `Arcanum` folder and any custom modules.
+
+INI sections:
+
+| Section  | Key              | Description                                |
+|----------|------------------|--------------------------------------------|
+| `Paths`  | `ArcanumPath`    | Absolute path to the Arcanum install dir   |
+| `Paths`  | `LastDLGFolder`  | Last directory used by **Load .dlg**       |
+| `Debug`  | `VerboseDebug`   | Forward `outputnormally=False` log lines   |
+| `Debug`  | `DebugLogging`   | Master switch for the in-app debug memo    |
+| `Editor` | `LineNumberStep` | Dialog line-number step (1–1000)           |
 
 ## Legend
 

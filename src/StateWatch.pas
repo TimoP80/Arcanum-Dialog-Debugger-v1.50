@@ -5,7 +5,7 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Grids, Vcl.StdCtrls, System.Generics.Collections,
-  System.Math, DialogEngine;
+  System.Math, DialogEngine, Vcl.ComCtrls;
 
 type
   TfrmStateWatch = class(TForm)
@@ -42,7 +42,7 @@ implementation
 
 {$R *.dfm}
 
-uses System.Math;
+
 
 const
   SkillNames: array[0..15] of string = (
